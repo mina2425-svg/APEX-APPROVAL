@@ -32,7 +32,7 @@ prompt APPLICATION 111 - Approval Cycle Demo
 --   Exported By:     MINA.ISKANDAR
 --   Flashback:       0
 --   Export Type:     Application Export
---     Pages:                      6
+--     Pages:                      5
 --       Items:                   11
 --       Processes:                7
 --       Regions:                  9
@@ -172,14 +172,6 @@ wwv_flow_imp_shared.create_list_item(
 ,p_list_item_icon=>'fa-forms'
 ,p_list_item_current_type=>'TARGET_PAGE'
 );
-wwv_flow_imp_shared.create_list_item(
- p_id=>wwv_flow_imp.id(50694235194510219)
-,p_list_item_display_sequence=>40
-,p_list_item_link_text=>'Approval Inbox'
-,p_list_item_link_target=>'f?p=&APP_ID.:4:&APP_SESSION.::&DEBUG.:::'
-,p_list_item_icon=>'fa-table'
-,p_list_item_current_type=>'TARGET_PAGE'
-);
 end;
 /
 prompt --application/shared_components/navigation/lists/navigation_bar
@@ -238,14 +230,6 @@ wwv_flow_imp_shared.create_list_item(
 ,p_list_item_link_text=>'New Request'
 ,p_list_item_link_target=>'f?p=&APP_ID.:3:&APP_SESSION.::&DEBUG.:::'
 ,p_list_item_icon=>'fa-forms'
-,p_list_item_current_type=>'TARGET_PAGE'
-);
-wwv_flow_imp_shared.create_list_item(
- p_id=>wwv_flow_imp.id(50704421902510230)
-,p_list_item_display_sequence=>40
-,p_list_item_link_text=>'Approval Inbox'
-,p_list_item_link_target=>'f?p=&APP_ID.:4:&APP_SESSION.::&DEBUG.:::'
-,p_list_item_icon=>'fa-table'
 ,p_list_item_current_type=>'TARGET_PAGE'
 );
 end;
@@ -742,12 +726,6 @@ wwv_flow_imp_shared.create_menu_option(
 ,p_short_name=>'New Request'
 ,p_link=>'f?p=&APP_ID.:3:&APP_SESSION.::&DEBUG.:::'
 ,p_page_id=>3
-);
-wwv_flow_imp_shared.create_menu_option(
- p_id=>wwv_flow_imp.id(50699060327510222)
-,p_short_name=>'Approval Inbox'
-,p_link=>'f?p=&APP_ID.:4:&APP_SESSION.::&DEBUG.:::'
-,p_page_id=>4
 );
 end;
 /
@@ -14962,76 +14940,6 @@ wwv_flow_imp_page.create_page_process(
 ,p_region_id=>wwv_flow_imp.id(50686633824510215)
 ,p_process_type=>'NATIVE_FORM_INIT'
 ,p_process_name=>'Initialize form New Request'
-);
-end;
-/
-prompt --application/pages/page_00004
-begin
-wwv_flow_imp_page.create_page(
- p_id=>4
-,p_name=>'Approval Inbox'
-,p_alias=>'APPROVAL-INBOX'
-,p_step_title=>'Approval Inbox'
-,p_autocomplete_on_off=>'OFF'
-,p_page_template_options=>'#DEFAULT#'
-,p_protection_level=>'C'
-,p_page_component_map=>'18'
-,p_last_updated_by=>'JULES'
-,p_last_upd_yyyymmddhh24miss=>'20250824015600'
-);
-wwv_flow_imp_page.create_page_plug(
- p_id=>wwv_flow_imp.id(50694930773510221)
-,p_plug_name=>'Approval Inbox'
-,p_region_name=>'approval_inbox_report'
-,p_region_template_options=>'#DEFAULT#:t-Region--scrollBody'
-,p_plug_template=>wwv_flow_imp.id(50579458136510144)
-,p_plug_display_sequence=>10
-,p_query_type=>'SQL'
-,p_plug_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
-'SELECT ar.requestor,',
-'       ar.description,',
-'       ac.status,',
-'       ac.cycle_id,',
-'       ar.request_id,',
-'       null as approve,',
-'       null as reject,',
-'       null as request_info',
-'FROM APP_APPROVAL_CYCLE ac, APP_REQUESTS ar',
-'WHERE ac.request_id = ar.request_id',
-'AND ac.status = ''Pending''',
-'AND ac.approver_id = :APP_USER_ID'))
-,p_plug_source_type=>'NATIVE_CLASSIC_REPORT'
-);
-wwv_flow_imp_page.create_page_plug(
- p_id=>wwv_flow_imp.id(50698687786510222)
-,p_plug_name=>'Breadcrumb'
-,p_region_template_options=>'#DEFAULT#:t-BreadcrumbRegion--useBreadcrumbTitle'
-,p_component_template_options=>'#DEFAULT#'
-,p_plug_template=>wwv_flow_imp.id(50541330501510133)
-,p_plug_display_sequence=>20
-,p_plug_display_point=>'REGION_POSITION_01'
-,p_menu_id=>wwv_flow_imp.id(50468293225510108)
-,p_plug_source_type=>'NATIVE_BREADCRUMB'
-,p_menu_template_id=>wwv_flow_imp.id(50645457160510166)
-);
-wwv_flow_imp_page.create_page_da_event(
-    p_id=>wwv_flow_imp.id(22359000000000009)
-   ,p_name=>'Refresh Report on Dialog Close'
-   ,p_event_sequence=>10
-   ,p_triggering_element_type=>'REGION'
-   ,p_triggering_region_id=>wwv_flow_imp.id(50694930773510221)
-   ,p_bind_type=>'bind'
-   ,p_bind_event_type=>'apexafterclosedialog'
-);
-wwv_flow_imp_page.create_page_da_action(
-    p_id=>wwv_flow_imp.id(22359000000000010)
-   ,p_event_id=>wwv_flow_imp.id(22359000000000009)
-   ,p_event_result=>'TRUE'
-   ,p_action_sequence=>10
-   ,p_execute_on_page_init=>'N'
-   ,p_action=>'NATIVE_REFRESH'
-   ,p_affected_elements_type=>'REGION'
-   ,p_affected_region_id=>wwv_flow_imp.id(50694930773510221)
 );
 end;
 /
