@@ -172,6 +172,14 @@ wwv_flow_imp_shared.create_list_item(
 ,p_list_item_icon=>'fa-forms'
 ,p_list_item_current_type=>'TARGET_PAGE'
 );
+wwv_flow_imp_shared.create_list_item(
+ p_id=>wwv_flow_imp.id(22358000000000050)
+,p_list_item_display_sequence=>40
+,p_list_item_link_text=>'Approval Inbox'
+,p_list_item_link_target=>'f?p=&APP_ID.:4:&APP_SESSION.::&DEBUG.:::'
+,p_list_item_icon=>'fa-inbox'
+,p_list_item_current_type=>'TARGET_PAGE'
+);
 end;
 /
 prompt --application/shared_components/navigation/lists/navigation_bar
@@ -257,6 +265,12 @@ wwv_flow_imp_shared.create_menu_option(
 ,p_short_name=>'New Request'
 ,p_link=>'f?p=&APP_ID.:3:&APP_SESSION.::&DEBUG.:::'
 ,p_page_id=>3
+);
+wwv_flow_imp_shared.create_menu_option(
+ p_id=>wwv_flow_imp.id(22358000000000051)
+,p_short_name=>'Approval Inbox'
+,p_link=>'f?p=&APP_ID.:4:&APP_SESSION.::&DEBUG.:::'
+,p_page_id=>4
 );
 end;
 /
@@ -748,6 +762,143 @@ wwv_flow_imp_page.create_page_process(
 ,p_region_id=>wwv_flow_imp.id(50686633824510215)
 ,p_process_type=>'NATIVE_FORM_INIT'
 ,p_process_name=>'Initialize form New Request'
+);
+end;
+/
+prompt --application/pages/page_00004
+begin
+wwv_flow_imp_page.create_page(
+ p_id=>4
+,p_name=>'Approval Inbox'
+,p_alias=>'APPROVAL-INBOX'
+,p_step_title=>'Approval Inbox'
+,p_autocomplete_on_off=>'OFF'
+,p_page_template_options=>'#DEFAULT#'
+,p_protection_level=>'C'
+,p_page_component_map=>'16'
+,p_last_updated_by=>'JULES'
+,p_last_upd_yyyymmddhh24miss=>'20250824053000'
+);
+wwv_flow_imp_page.create_page_plug(
+ p_id=>wwv_flow_imp.id(22358000000000052)
+,p_plug_name=>'Breadcrumb'
+,p_region_template_options=>'#DEFAULT#:t-BreadcrumbRegion--useBreadcrumbTitle'
+,p_component_template_options=>'#DEFAULT#'
+,p_plug_template=>wwv_flow_imp.id(50541330501510133)
+,p_plug_display_sequence=>10
+,p_plug_display_point=>'REGION_POSITION_01'
+,p_menu_id=>wwv_flow_imp.id(50468293225510108)
+,p_plug_source_type=>'NATIVE_BREADCRUMB'
+,p_menu_template_id=>wwv_flow_imp.id(50645457160510166)
+);
+wwv_flow_imp_page.create_page_plug(
+ p_id=>wwv_flow_imp.id(22358000000000053)
+,p_plug_name=>'Approval Inbox'
+,p_region_template_options=>'#DEFAULT#'
+,p_plug_template=>wwv_flow_imp.id(50527859915510130) -- Classic Report
+,p_plug_display_sequence=>20
+,p_plug_display_point=>'BODY'
+,p_query_type=>'SQL'
+,p_plug_source=>wwv_flow_string.join(wwv_flow_t_varchar2(
+'SELECT req.request_id,',
+'       req.description,',
+'       req.status,',
+'       a.approval_id,',
+'       ''Approve'' as "APPROVE",',
+'       ''Reject'' as "REJECT",',
+'       ''Request Info'' as "REQUEST_INFO"',
+'FROM   app_requests req',
+'       join approvals a',
+'         on req.request_id = a.request_id',
+'WHERE  a.approver_id = (select user_id from users where lower(username) = lower(:APP_USER))',
+'AND    a.status = ''Pending'''
+))
+,p_plug_source_type=>'NATIVE_CLASSIC_REPORT'
+,p_plug_query_options=>'DERIVED_REPORT_COLUMNS'
+);
+wwv_flow_imp_page.create_report_region(
+ p_id=>wwv_flow_imp.id(22358000000000053)
+,p_template_id=>wwv_flow_imp.id(50622963056510156)
+,p_show_query_info=>'N'
+,p_show_nulls_as=>'-'
+,p_pagination_display_position=>'BOTTOM_RIGHT'
+);
+wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(22358000000000054)
+,p_query_column_id=>1
+,p_column_alias=>'REQUEST_ID'
+,p_column_display_sequence=>1
+,p_hidden_column=>'Y'
+);
+wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(22358000000000055)
+,p_query_column_id=>2
+,p_column_alias=>'DESCRIPTION'
+,p_column_display_sequence=>2
+,p_column_heading=>'Description'
+);
+wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(22358000000000056)
+,p_query_column_id=>3
+,p_column_alias=>'STATUS'
+,p_column_display_sequence=>3
+,p_column_heading=>'Status'
+);
+wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(22358000000000057)
+,p_query_column_id=>4
+,p_column_alias=>'APPROVAL_ID'
+,p_column_display_sequence=>4
+,p_hidden_column=>'Y'
+);
+wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(22358000000000058)
+,p_query_column_id=>5
+,p_column_alias=>'APPROVE'
+,p_column_display_sequence=>5
+,p_column_heading=>'Approve'
+,p_column_link=>'f?p=&APP_ID.:5:&APP_SESSION.::&DEBUG.::P5_REQUEST_ID,P5_APPROVAL_ID,P5_ACTION:#REQUEST_ID#,#APPROVAL_ID#,Approve'
+,p_column_linktext=>'#APPROVE#'
+,p_column_link_attributes=>'class="t-Button t-Button--success t-Button--small"'
+);
+wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(22358000000000059)
+,p_query_column_id=>6
+,p_column_alias=>'REJECT'
+,p_column_display_sequence=>6
+,p_column_heading=>'Reject'
+,p_column_link=>'f?p=&APP_ID.:5:&APP_SESSION.::&DEBUG.::P5_REQUEST_ID,P5_APPROVAL_ID,P5_ACTION:#REQUEST_ID#,#APPROVAL_ID#,Reject'
+,p_column_linktext=>'#REJECT#'
+,p_column_link_attributes=>'class="t-Button t-Button--danger t-Button--small"'
+);
+wwv_flow_imp_page.create_report_columns(
+ p_id=>wwv_flow_imp.id(22358000000000060)
+,p_query_column_id=>7
+,p_column_alias=>'REQUEST_INFO'
+,p_column_display_sequence=>7
+,p_column_heading=>'Request Info'
+,p_column_link=>'f?p=&APP_ID.:5:&APP_SESSION.::&DEBUG.::P5_REQUEST_ID,P5_APPROVAL_ID,P5_ACTION:#REQUEST_ID#,#APPROVAL_ID#,RequestInfo'
+,p_column_linktext=>'#REQUEST_INFO#'
+,p_column_link_attributes=>'class="t-Button t-Button--warning t-Button--small"'
+);
+wwv_flow_imp_page.create_page_da_event(
+ p_id=>wwv_flow_imp.id(22358000000000065)
+,p_name=>'Refresh Inbox on Dialog Close'
+,p_event_sequence=>10
+,p_triggering_element_type=>'REGION'
+,p_triggering_region_id=>wwv_flow_imp.id(22358000000000053)
+,p_bind_type=>'bind'
+,p_bind_event_type=>'apexafterclosedialog'
+);
+wwv_flow_imp_page.create_page_da_action(
+ p_id=>wwv_flow_imp.id(22358000000000066)
+,p_event_id=>wwv_flow_imp.id(22358000000000065)
+,p_event_result=>'TRUE'
+,p_action_sequence=>10
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_REFRESH'
+,p_affected_elements_type=>'REGION'
+,p_affected_region_id=>wwv_flow_imp.id(22358000000000053)
 );
 end;
 /
