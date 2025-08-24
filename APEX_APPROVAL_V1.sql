@@ -14993,15 +14993,14 @@ wwv_flow_imp_page.create_page_plug(
 '       ac.status,',
 '       ac.cycle_id,',
 '       ar.request_id,',
-'       null as approve_link,',
-'       null as reject_link,',
-'       null as request_info_link',
+'       null as approve,',
+'       null as reject,',
+'       null as request_info',
 'FROM APP_APPROVAL_CYCLE ac, APP_REQUESTS ar',
 'WHERE ac.request_id = ar.request_id',
 'AND ac.status = ''Pending''',
 'AND ac.approver_id = :APP_USER_ID'))
 ,p_plug_source_type=>'NATIVE_CLASSIC_REPORT'
-,p_plug_query_options=>'DERIVED_REPORT_COLUMNS'
 );
 wwv_flow_imp_page.create_report_column(
  p_id=>wwv_flow_imp.id(22359000000000001)
@@ -15035,24 +15034,18 @@ wwv_flow_imp_page.create_report_column(
 ,p_db_column_name=>'CYCLE_ID'
 ,p_display_order=>4
 ,p_column_identifier=>'D'
-,p_column_label=>'Cycle ID'
-,p_column_type=>'NUMBER'
-,p_display_in_default_rpt=>'N'
-,p_use_as_row_header=>'N'
+,p_column_type=>'HIDDEN_COLUMN'
 );
 wwv_flow_imp_page.create_report_column(
  p_id=>wwv_flow_imp.id(22359000000000005)
 ,p_db_column_name=>'REQUEST_ID'
 ,p_display_order=>5
 ,p_column_identifier=>'E'
-,p_column_label=>'Request ID'
-,p_column_type=>'NUMBER'
-,p_display_in_default_rpt=>'N'
-,p_use_as_row_header=>'N'
+,p_column_type=>'HIDDEN_COLUMN'
 );
 wwv_flow_imp_page.create_report_column(
     p_id=>wwv_flow_imp.id(22359000000000006)
-   ,p_db_column_name=>'APPROVE_LINK'
+   ,p_db_column_name=>'APPROVE'
    ,p_display_order=>6
    ,p_column_identifier=>'F'
    ,p_column_label=>'Approve'
@@ -15063,7 +15056,7 @@ wwv_flow_imp_page.create_report_column(
 );
 wwv_flow_imp_page.create_report_column(
     p_id=>wwv_flow_imp.id(22359000000000007)
-   ,p_db_column_name=>'REJECT_LINK'
+   ,p_db_column_name=>'REJECT'
    ,p_display_order=>7
    ,p_column_identifier=>'G'
    ,p_column_label=>'Reject'
@@ -15074,7 +15067,7 @@ wwv_flow_imp_page.create_report_column(
 );
 wwv_flow_imp_page.create_report_column(
     p_id=>wwv_flow_imp.id(22359000000000008)
-   ,p_db_column_name=>'REQUEST_INFO_LINK'
+   ,p_db_column_name=>'REQUEST_INFO'
    ,p_display_order=>8
    ,p_column_identifier=>'H'
    ,p_column_label=>'Request Information'
