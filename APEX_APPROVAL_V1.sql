@@ -816,13 +816,6 @@ wwv_flow_imp_page.create_page_plug(
 ,p_plug_source_type=>'NATIVE_CLASSIC_REPORT'
 ,p_plug_query_options=>'DERIVED_REPORT_COLUMNS'
 );
-wwv_flow_imp_page.create_report_region(
- p_id=>wwv_flow_imp.id(22358000000000053)
-,p_template_id=>wwv_flow_imp.id(50622963056510156)
-,p_show_query_info=>'N'
-,p_show_nulls_as=>'-'
-,p_pagination_display_position=>'BOTTOM_RIGHT'
-);
 wwv_flow_imp_page.create_report_columns(
  p_id=>wwv_flow_imp.id(22358000000000054)
 ,p_query_column_id=>1
